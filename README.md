@@ -1,5 +1,0 @@
-﻿# PT-Grupo-9-Backend
-
-O projeto situado nesse repositório é o backend de um site de vendas com estoque, feito para o Processo Trainee da empresa júnior CJR. 
-O site irá contar com cadastro e login de usuários, plataforma de venda com categorias e filtros, e páginas de produto com imagens, descrição e avaliações de outros compradores. Ao logar, as lojas tem a opção de cadastrar novos produtos e administrar suas vendas.
-
