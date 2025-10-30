@@ -6,11 +6,23 @@ import { Loja } from './entities/loja.entity';
 @Injectable()
 export class LojasService{
   private lojas: Loja[] = [];
-  private ultimoId = 0;
+  private id = 0;
 
-create(createLojaDto: CreateLojaDto): Loja{
-    this.ultimoId++;
-    const novaLoja: Loja = { id: this.ultimoId, ...createLojaDto, };
+  create(createLojaDto: CreateLojaDto, idUsuario: number): Loja {
+    this.id++;
+
+    const novaLoja: Loja = {
+      id: this.id,
+      nome: createLojaDto.nome,
+      endereco: createLojaDto.endereco,
+      descricao: createLojaDto.descricao || null,
+      telefone: createLojaDto.telefone || null,
+      
+      
+      idCategoria: createLojaDto.categoriaId,
+      idProprietario: idUsuario
+    };
+
     this.lojas.push(novaLoja);
     return novaLoja;
   }

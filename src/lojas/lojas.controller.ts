@@ -9,7 +9,8 @@ export class LojasController {
 
   @Post()
   create(@Body() createLojaDto: CreateLojaDto) {
-    return this.lojasService.create(createLojaDto);
+    const userId = createLojaDto.idUsuario;
+    return this.lojasService.create(createLojaDto, userId); // Tive que modificar isso, pois o create precisa receber o id do Usuário
   }
 
   @Get()
