@@ -17,11 +17,11 @@ datasource db {
 
 model Usuarios {
   id        Int             @id @default(autoincrement())
-  username  String          @db.Varchar(500)
+  username  String          @db.Varchar(500)  @unique
   nome      String          @db.Varchar(255)
-  email     String          @db.Varchar(255)
+  email     String          @db.Varchar(255)  @unique
   senha_hash  String        @db.Varchar(255)
-  foto_perfil_url?  String   @db.Varchar(255)
+  foto_perfil_url?  String  @db.Varchar(255)
   createAt          
   updatedAt
   //coloque algo para colocar no mínimo 8
