@@ -40,5 +40,5 @@ model Loja {
 
 model Produto {
   id          Int   @id @default(autoincrement())
-
+  nome        String
 }
