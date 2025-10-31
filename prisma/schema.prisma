@@ -13,32 +13,35 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+//estrutura do banco de dados
 
-model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  posts Post[]
+model Usuarios {
+  id        Int             @id @default(autoincrement())
+  username  String          @db.Varchar(500)
+  nome      String          @db.Varchar(255)
+  email     String          @db.Varchar(255)
+  senha_hash  String        @db.Varchar(255)
+  foto_perfil_url?  String   @db.Varchar(255)
+  createAt          
+  updatedAt
   //coloque algo para colocar no mínimo 8
-  senha String  @db.Varchar(20)
+  
 }
 
-model Post {
-  id       Int     @id @default(autoincrement())
-  title    String
-  content  String
-  author   User    @relation(fields: [authorId], references: [id])
-  authorId Int
-}
+//  author   User    @relation(fields: [authorId], references: [id])
 
-model Loja {
-  id        Int    @id @default(autoincrement())
-  nome      String @db.Varchar(20)
-  produtos Produto[]
-
-
-}
-
-model Produto {
+model Produtos {
   id          Int   @id @default(autoincrement())
   nome        String
+  // avaliacao    Int
+  
 }
+model Lojas {
+  id        Int    @id @default(autoincrement())
+  nome      String @db.Varchar(20)
+  // avalicao  Int
+  produtos Produto[]
+
+}
+
+model Imagens
