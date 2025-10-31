@@ -14,34 +14,112 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 //estrutura do banco de dados
+model Categorias {
+  id             Int           @id @default(autoincrement())
+  nome           String        @db.VarChar(100)
+  categoriaPaiId Int?
+  categoriaPai   Categorias?   @relation("CategoriaPai", fields: [categoriaPaiId], references: [id])
+  subcategorias  Categorias[]  @relation("CategoriaPai")
+
+  produtos       Produto[]
+}
+
 
 model Usuarios {
   id        Int             @id @default(autoincrement())
-  username  String          @db.Varchar(500)  @unique
-  nome      String          @db.Varchar(255)
-  email     String          @db.Varchar(255)  @unique
-  senha_hash  String        @db.Varchar(255)
-  foto_perfil_url?  String  @db.Varchar(255)
-  createAt          
-  updatedAt
-  //coloque algo para colocar no mínimo 8
-  
+  username  String          @db.VarChar(50)  @unique
+  nome      String          @db.VarChar(255)
+  email     String          @db.VarChar(255)  @unique
+  senha_hash  String        @db.VarChar(255)
+  foto_perfil_url  String?  @db.VarChar(255)
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+
+  lojas           Lojas[]
+  avaliacoes      Avaliacao_produto[]
+  comentarios     Comentarios_avaliacao[]
+}
+model Produtos {
+  id           Int        @id @default(autoincrement())
+  lojaId       Int
+  categoriaId  Int
+  nome         String     @db.VarChar(255)
+  descricao    String?
+  preco        Float
+  estoque      Int        @default(0)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  loja         Lojas      @relation(fields: [lojaId], references: [id])
+  categoria    Categorias @relation(fields: [categoriaId], references: [id])
+  avaliacoes   Avaliacao_produto[]
+  imagens      Imagens_produto[]
 }
 
 //  author   User    @relation(fields: [authorId], references: [id])
 
-model Produtos {
-  id          Int   @id @default(autoincrement())
-  nome        String
-  // avaliacao    Int
-  
+model Avaliacao_produto {
+  id          Int       @id @default(autoincrement())
+  usuarioId   Int
+  produtoId   Int
+  nota        Int
+  comentario  String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  usuario     Usuarios  @relation(fields: [usuarioId], references: [id])
+  produto     Produto   @relation(fields: [produtoId], references: [id])
+  @@unique([usuarioId, produtoId])
 }
+
+model Avaliacoes_loja {
+  id          Int       @id @default(autoincrement())
+  lojaId      Int
+  produtoId   Int
+  nota        Int
+  comentario  String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  loja        Lojas     @relation(fields: [lojaId], references: [id])
+  produto     Produto   @relation(fields: [produtoId], references: [id])
+  comentarios Comentarios_avaliacao[]
+}
+
+
+model Comentarios_avaliacao {
+  id                Int              @id @default(autoincrement())
+  usuarioId         Int
+  avaliacaoLojaId   Int
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  usuario           Usuarios         @relation(fields: [usuarioId], references: [id])
+  avaliacaoLoja     Avaliacoes_loja  @relation(fields: [avaliacaoLojaId], references: [id])
+}
+
+model Imagens_produto {
+  id          Int      @id @default(autoincrement())
+  produtoId   Int
+  url_imagem  String   @db.VarChar(255)
+  ordem       Int
+
+  produto     Produto  @relation(fields: [produtoId], references: [id])
+}
+
 model Lojas {
-  id        Int    @id @default(autoincrement())
-  nome      String @db.Varchar(20)
-  // avalicao  Int
-  produtos Produto[]
+  id          Int       @id @default(autoincrement())
+  nome        String    @db.VarChar(255)
+  usuarioId   Int
+  usuario     Usuarios  @relation(fields: [usuarioId], references: [id])
+  descricao   String
+  logo_url    String    @db.VarChar(255)
+  banner_url  String    @db.VarChar(255)
+  sticker_url String    @db.VarChar(255)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 
+  produtos    Produto[]
+  avaliacoes  Avaliacoes_loja[]
 }
 
-model Imagens
