@@ -13,113 +13,112 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
 //estrutura do banco de dados
 model Categorias {
-  id             Int           @id @default(autoincrement())
-  nome           String        @db.VarChar(100)
+  id             Int          @id @default(autoincrement())
+  nome           String       @db.VarChar(100)
   categoriaPaiId Int?
-  categoriaPai   Categorias?   @relation("CategoriaPai", fields: [categoriaPaiId], references: [id])
-  subcategorias  Categorias[]  @relation("CategoriaPai")
-
-  produtos       Produto[]
+  categoriaPai   Categorias?  @relation("CategoriaPai", fields: [categoriaPaiId], references: [id])
+  subcategorias  Categorias[] @relation("CategoriaPai")
+  Produtos       Produtos[]
 }
-
 
 model Usuarios {
-  id        Int             @id @default(autoincrement())
-  username  String          @db.VarChar(50)  @unique
-  nome      String          @db.VarChar(255)
-  email     String          @db.VarChar(255)  @unique
-  senha_hash  String        @db.VarChar(255)
-  foto_perfil_url  String?  @db.VarChar(255)
-  createdAt  DateTime   @default(now())
-  updatedAt  DateTime   @updatedAt
+  id              Int      @id @default(autoincrement())
+  username        String   @unique @db.VarChar(50)
+  nome            String   @db.VarChar(255)
+  email           String   @unique @db.VarChar(255)
+  senha_hash      String   @db.VarChar(255)
+  foto_perfil_url String?  @db.VarChar(255)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 
-  lojas           Lojas[]
-  avaliacoes      Avaliacao_produto[]
-  comentarios     Comentarios_avaliacao[]
+  Avaliacao_produto     Avaliacao_produto[]
+  Comentarios_avaliacao Comentarios_avaliacao[]
+  Lojas                 Lojas[]
 }
-model Produtos {
-  id           Int        @id @default(autoincrement())
-  lojaId       Int
-  categoriaId  Int
-  nome         String     @db.VarChar(255)
-  descricao    String?
-  preco        Float
-  estoque      Int        @default(0)
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt
 
-  loja         Lojas      @relation(fields: [lojaId], references: [id])
-  categoria    Categorias @relation(fields: [categoriaId], references: [id])
-  avaliacoes   Avaliacao_produto[]
-  imagens      Imagens_produto[]
+model Produtos {
+  id          Int      @id @default(autoincrement())
+  lojaId      Int
+  categoriaId Int
+  nome        String   @db.VarChar(255)
+  descricao   String?
+  preco       Float
+  estoque     Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  loja              Lojas               @relation(fields: [lojaId], references: [id])
+  categoria         Categorias          @relation(fields: [categoriaId], references: [id])
+  Avaliacao_produto Avaliacao_produto[]
+  Avaliacoes_loja   Avaliacoes_loja[]
+  Imagens_produto   Imagens_produto[]
 }
 
 //  author   User    @relation(fields: [authorId], references: [id])
 
 model Avaliacao_produto {
-  id          Int       @id @default(autoincrement())
-  usuarioId   Int
-  produtoId   Int
-  nota        Int
-  comentario  String?
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  id         Int      @id @default(autoincrement())
+  usuarioId  Int
+  produtoId  Int
+  nota       Int
+  comentario String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 
-  usuario     Usuarios  @relation(fields: [usuarioId], references: [id])
-  produto     Produto   @relation(fields: [produtoId], references: [id])
+  usuario Usuarios @relation(fields: [usuarioId], references: [id])
+  produto Produtos @relation(fields: [produtoId], references: [id])
+
   @@unique([usuarioId, produtoId])
 }
 
 model Avaliacoes_loja {
-  id          Int       @id @default(autoincrement())
-  lojaId      Int
-  produtoId   Int
-  nota        Int
-  comentario  String?
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  id         Int      @id @default(autoincrement())
+  lojaId     Int
+  produtoId  Int
+  nota       Int
+  comentario String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 
-  loja        Lojas     @relation(fields: [lojaId], references: [id])
-  produto     Produto   @relation(fields: [produtoId], references: [id])
-  comentarios Comentarios_avaliacao[]
+  loja                  Lojas                   @relation(fields: [lojaId], references: [id])
+  produto               Produtos                @relation(fields: [produtoId], references: [id])
+  Comentarios_avaliacao Comentarios_avaliacao[]
 }
 
-
 model Comentarios_avaliacao {
-  id                Int              @id @default(autoincrement())
-  usuarioId         Int
-  avaliacaoLojaId   Int
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  id              Int      @id @default(autoincrement())
+  usuarioId       Int
+  avaliacaoLojaId Int
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 
-  usuario           Usuarios         @relation(fields: [usuarioId], references: [id])
-  avaliacaoLoja     Avaliacoes_loja  @relation(fields: [avaliacaoLojaId], references: [id])
+  usuario       Usuarios        @relation(fields: [usuarioId], references: [id])
+  avaliacaoLoja Avaliacoes_loja @relation(fields: [avaliacaoLojaId], references: [id])
 }
 
 model Imagens_produto {
-  id          Int      @id @default(autoincrement())
-  produtoId   Int
-  url_imagem  String   @db.VarChar(255)
-  ordem       Int
+  id         Int    @id @default(autoincrement())
+  produtoId  Int
+  url_imagem String @db.VarChar(255)
+  ordem      Int
 
-  produto     Produto  @relation(fields: [produtoId], references: [id])
+  produto Produtos @relation(fields: [produtoId], references: [id])
 }
 
 model Lojas {
-  id          Int       @id @default(autoincrement())
-  nome        String    @db.VarChar(255)
-  usuarioId   Int
-  usuario     Usuarios  @relation(fields: [usuarioId], references: [id])
-  descricao   String
-  logo_url    String    @db.VarChar(255)
-  banner_url  String    @db.VarChar(255)
-  sticker_url String    @db.VarChar(255)
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-
-  produtos    Produto[]
-  avaliacoes  Avaliacoes_loja[]
+  id              Int               @id @default(autoincrement())
+  nome            String            @db.VarChar(255)
+  usuarioId       Int
+  usuario         Usuarios          @relation(fields: [usuarioId], references: [id])
+  descricao       String
+  logo_url        String            @db.VarChar(255)
+  banner_url      String            @db.VarChar(255)
+  sticker_url     String            @db.VarChar(255)
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  Produtos        Produtos[]
+  Avaliacoes_loja Avaliacoes_loja[]
 }
-
