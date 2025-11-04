@@ -10,7 +10,7 @@ export class ProdutoService {
 
   constructor(private prisma: PrismaService) {}
 
-async create(data: CreateProdutoDto) {
+  async create(data: CreateProdutoDto) {
   const produto = await this.prisma.produtos.create({
     data: {
       lojaId: data.lojaId,
@@ -22,7 +22,7 @@ async create(data: CreateProdutoDto) {
     },
   });
   return produto;
-}
+  }
 
   async findAll() {
     return this.prisma.produtos.findMany();
