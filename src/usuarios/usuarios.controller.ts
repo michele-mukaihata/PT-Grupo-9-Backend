@@ -19,16 +19,16 @@ export class UsuarioController {
 
   @Get(':id')
   async findOne(@Param('id') id: number) {
-    return this.usuarioService.findOne(id);
+    return this.usuarioService.findOne(Number(id));
   }
 
   @Patch(':id')
   async update(@Param('id') id: number, @Body() updateUsuarioDto: UpdateUsuarioDto) {
-    return this.usuarioService.update(id, updateUsuarioDto);
+    return this.usuarioService.update(Number(id), updateUsuarioDto);
   }
 
   @Delete(':id')
   async remove(@Param('id') id: number) {
-    return this.usuarioService.remove(id);
+    return this.usuarioService.remove(Number(id));
   }
 }
