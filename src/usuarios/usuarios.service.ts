@@ -1,25 +1,28 @@
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../database/prisma.service';
-import { CreateUsuariosDto } from './dto/create-usuario.dto';
-import { UpdateUsuariosDto } from './dto/update-usuario.dto';
+import { CreateUsuarioDto } from './dto/create-usuario.dto';
+import { UpdateUsuarioDto } from './dto/update-usuario.dto';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
-export class UsuariosService {
+export class UsuarioService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(createUsuarioDto: CreateUsuariosDto) {
-    const existingUsuario = await this.prisma.usuarios.findUnique({ where: { email: createUsuarioDto.email } });
+  async create(dados: CreateUsuarioDto) {
+    const existingUsuario = await this.prisma.usuarios.findUnique({ where: { email: dados.email } });
     if (existingUsuario) {
       throw new ConflictException('Este e-mail já está sendo usado.');
     }
 
-    const hashedPassword = await bcrypt.hash(createUsuarioDto.senha, 10);
+    const hashedPassword = await bcrypt.hash(dados.senha_hash, 10);
     
     return await this.prisma.usuarios.create({
       data: {
-        ...createUsuarioDto,
+        email: dados.email,
+        username: dados.username, // Adicionando username ao data
+        nome: dados.nome,
         senha_hash: hashedPassword,
+        foto_perfil_url: dados.foto_perfil_url || null,
       },
     });
   }
@@ -36,13 +39,14 @@ export class UsuariosService {
     });
   }
 
-  async findOne(id: string) {
+  async findOne(id: number) {
     const usuario = await this.prisma.usuarios.findUnique({
       where: { id },
       select: {
         id: true,
         email: true,
         nome: true,
+        username: true,
         createdAt: true,
         updatedAt: true,
       },
@@ -65,7 +69,7 @@ export class UsuariosService {
     return usuario;
   }
 
-  async update(id: number, updateUsuarioDto: UpdateUsuariosDto) {
+  async update(id: number, dados: UpdateUsuarioDto) {
     const usuario = await this.prisma.usuarios.findUnique({
       where: { id },
     });
@@ -74,13 +78,19 @@ export class UsuariosService {
       throw new NotFoundException(`Usuario with ID ${id} not found`);
     }
 
-    const hashedPassword = await bcrypt.hash(updateUsuarioDto.senha, 10);
+  const hashedPassword = dados.senha_hash
+    ? await bcrypt.hash(dados.senha_hash, 10)
+    : usuario.senha_hash; // Caso contrário, mantém o hash da senha existente
+
 
     return await this.prisma.usuarios.update({
       where: { id },
       data: {
-        ...updateUsuarioDto,
-        senha_hash: hashedPassword,
+        email: dados.email,
+        username: dados.username, // Atualiza username
+        nome: dados.nome,         // Atualiza nome
+        senha_hash: hashedPassword,          // Atualiza a senha, se fornecida
+        foto_perfil_url: dados.foto_perfil_url || usuario.foto_perfil_url,
       },
       select: {
         id: true,
