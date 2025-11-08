@@ -20,7 +20,7 @@ export class CategoriasService {
   }
 
   async findAll() {
-    return this.prisma.findMany();
+    return this.prisma.categorias.findMany();
   }
 
   async findOne(id: number) {
