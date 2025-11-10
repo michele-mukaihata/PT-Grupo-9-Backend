@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException} from '@nestjs/common';
 import { CreateCategoriaDto } from './dto/create-categoria.dto';
 import { UpdateCategoriaDto } from './dto/update-categoria.dto';
 import { PrismaService } from 'src/database/prisma.service';
+import { Get, Param } from '@nestjs/common';
 
 
 @Injectable()
@@ -19,11 +20,13 @@ export class CategoriasService {
     return categoria;
   }
 
+  @Get()
   async findAll() {
     return this.prisma.categorias.findMany();
   }
 
-  async findOne(id: number) {
+  @Get(':id')
+  async findOne(@Param('id') id: number) {
     const categoriaExists = await this.prisma.categorias.findUnique({
       where: {id}
     });
@@ -47,13 +50,13 @@ export class CategoriasService {
   }
 
   async remove(id: number) {
-    const lojaExists = await this.prisma.categorias.findUnique({
+    const categoriaExists = await this.prisma.categorias.findUnique({
       where: {id}
     });
-    if (!lojaExists){
-      throw new Error("Essa loja não existe");
+    if (!categoriaExists){
+      throw new NotFoundException('Essa categoria não existe');
     }
-    return await this.prisma.lojas.delete({
+    return await this.prisma.categorias.delete({
       where: {id},
     });
   }

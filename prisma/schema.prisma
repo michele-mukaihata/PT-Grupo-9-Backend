@@ -50,7 +50,7 @@ model Produtos {
   updatedAt   DateTime @updatedAt
 
   loja              Lojas               @relation(fields: [lojaId], references: [id], onUpdate: Cascade, onDelete:Cascade)
-  categoria         Categorias          @relation(fields: [categoriaId], references: [id], onUpdate: Cascade, onDelete:Cascade)
+  categoria         Categorias          @relation(fields: [categoriaId], references: [id], onUpdate: Cascade)
   Avaliacao_produto Avaliacao_produto[]
   Avaliacoes_loja   Avaliacoes_loja[]
   Imagens_produto   Imagens_produto[]
