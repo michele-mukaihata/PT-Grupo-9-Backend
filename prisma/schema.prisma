@@ -7,6 +7,7 @@
 generator client {
   provider = "prisma-client-js"
 }
+
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
@@ -17,7 +18,7 @@ model Categorias {
   id             Int          @id @default(autoincrement())
   nome           String       @db.VarChar(100)
   categoriaPaiId Int?
-  categoriaPai   Categorias?  @relation("CategoriaPai", fields: [categoriaPaiId], references: [id], onUpdate: Cascade, onDelete:Cascade)
+  categoriaPai   Categorias?  @relation("CategoriaPai", fields: [categoriaPaiId], references: [id])
   subcategorias  Categorias[] @relation("CategoriaPai")
   Produtos       Produtos[]
 }
@@ -49,7 +50,7 @@ model Produtos {
   updatedAt   DateTime @updatedAt
 
   loja              Lojas               @relation(fields: [lojaId], references: [id], onUpdate: Cascade, onDelete:Cascade)
-  categoria         Categorias          @relation(fields: [categoriaId], references: [id], onUpdate: Cascade, onDelete:Cascade)
+  categoria         Categorias          @relation(fields: [categoriaId], references: [id], onUpdate: Cascade)
   Avaliacao_produto Avaliacao_produto[]
   Avaliacoes_loja   Avaliacoes_loja[]
   Imagens_produto   Imagens_produto[]
