@@ -14,7 +14,7 @@ export class UsuarioService {
       throw new ConflictException('Este e-mail já está sendo usado.');
     }
 
-    const hashedPassword = await bcrypt.hash(dados.senha_hash, 10);
+    const hashedPassword = await bcrypt.hash(dados.senha, 10);
     
     return await this.prisma.usuarios.create({
       data: {
@@ -78,9 +78,11 @@ export class UsuarioService {
       throw new NotFoundException(`Usuario with ID ${id} not found`);
     }
 
-  const hashedPassword = dados.senha_hash
-    ? await bcrypt.hash(dados.senha_hash, 10)
-    : usuario.senha_hash; // Caso contrário, mantém o hash da senha existente
+    let hashedPassword = usuario.senha_hash;
+    if (dados.senha) { 
+          // 3. Se sim, crie um *novo* hash para a *nova* senha
+      hashedPassword = await bcrypt.hash(dados.senha, 10);
+    }
 
 
     return await this.prisma.usuarios.update({
