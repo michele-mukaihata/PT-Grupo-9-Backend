@@ -8,9 +8,10 @@ import { LojasModule } from './lojas/lojas.module';
 import { CategoriasModule } from './categorias/categorias.module';
 import { AvaliacoesModule } from './avaliacoes/avaliacoes.module';
 import { PrismaService } from './database/prisma.service';
+import { ComentariosModule } from './comentarios/comentarios.module';
 
 @Module({
-  imports: [ProdutoModule, ImagensProdutoModule, UsuariosModule, LojasModule, CategoriasModule, AvaliacoesModule],
+  imports: [ProdutoModule, ImagensProdutoModule, UsuariosModule, LojasModule, CategoriasModule, AvaliacoesModule, ComentariosModule],
   controllers: [AppController],
   providers: [AppService, PrismaService],
 })
