@@ -1,14 +1,10 @@
-/* eslint-disable prettier/prettier */
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { CreateAuthDto } from './dto/create-auth.dto';
-import { UpdateAuthDto } from './dto/update-auth.dto';
 import * as bcrypt from 'bcrypt';
 import { UsuarioService } from 'src/usuarios/usuarios.service';
 import { UsuarioPayLoad } from './types/UsuarioPayLoad';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { UsuarioToken } from './types/UsuarioToken';
-import { UsuariosEntity } from 'src/usuarios/entities/usuario.entity';
 import { LoginRequestBody } from './dto/loginRequestBody.dto';
 
 @Injectable()
@@ -29,6 +25,7 @@ import { LoginRequestBody } from './dto/loginRequestBody.dto';
         const payload: UsuarioPayLoad = {
             sub: isUserValid.id.toString(),
             email: loginRequestBody.email,
+            username: isUserValid.username,
         };
 
         const jwtSecret = this.configService.get<string>('JWT_SECRET');

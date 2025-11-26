@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body, UseGuards, Request, HttpStatus, HttpCode } from '@nestjs/common';
-import { AuthService } from './auth.service';
-import { AuthGuard } from 'src/auth/guards/auth.guard';
+import { AuthService } from "./auth.service";
+import { AuthGuard } from "src/auth/guards/auth.guard";
 import { Public } from 'src/auth/decorators/isPublic.decorator';
 import { LoginRequestBody } from './dto/loginRequestBody.dto';
 

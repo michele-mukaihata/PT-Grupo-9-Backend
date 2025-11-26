@@ -1,7 +1,8 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { PrismaService } from '../database/prisma.service';
 import { CreateUsuarioDto } from './dto/create-usuario.dto';
 import { UpdateUsuarioDto } from './dto/update-usuario.dto';
+import { ChangePasswordDto } from './dto/change-password.dto';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
@@ -19,7 +20,7 @@ export class UsuarioService {
     return await this.prisma.usuarios.create({
       data: {
         email: dados.email,
-        username: dados.username, // Adicionando username ao data
+        username: dados.username,
         nome: dados.nome,
         senha_hash: hashedPassword,
         foto_perfil_url: dados.foto_perfil_url || null,
@@ -58,6 +59,25 @@ export class UsuarioService {
 
     return usuario;
   }
+
+  async findByUsername(username: string) {
+    const usuario = await this.prisma.usuarios.findUnique({
+      where: { username },
+      select: {
+        id: true,
+        nome: true,
+        email: true,
+        username: true,
+        foto_perfil_url: true,
+      }
+    });
+
+    if (!usuario) {
+      throw new NotFoundException(`Usuário ${username} não encontrado`);
+    }
+
+    return usuario;
+}
 
   async findByEmail(email: string) {
     const usuario = await this.prisma.usuarios.findUnique({ where: { email } });
@@ -100,6 +120,29 @@ export class UsuarioService {
         nome: true,
         createdAt: true,
         updatedAt: true,
+      },
+    });
+  }
+
+  async updatePassword(id: number, dados: ChangePasswordDto) {
+    const usuario = await this.prisma.usuarios.findUnique({ where: { id } });
+
+    if (!usuario) {
+      throw new NotFoundException('Usuário não encontrado');
+    }
+
+    const isPasswordValid = await bcrypt.compare(dados.senhaAntiga, usuario.senha_hash);
+    
+    if (!isPasswordValid) {
+      throw new UnauthorizedException('A senha antiga está incorreta.');
+    }
+
+    const newHashedPassword = await bcrypt.hash(dados.novaSenha, 10);
+
+    return await this.prisma.usuarios.update({
+      where: { id },
+      data: {
+        senha_hash: newHashedPassword,
       },
     });
   }
