@@ -34,7 +34,7 @@ model Usuarios {
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 
-  Avaliacao_produto     Avaliacao_produto[]
+  Avaliacoes_produto     Avaliacoes_produto[]
   Comentarios_avaliacao Comentarios_avaliacao[]
   Lojas                 Lojas[]
 }
@@ -52,14 +52,14 @@ model Produtos {
 
   loja              Lojas               @relation(fields: [lojaId], references: [id], onUpdate: Cascade, onDelete:Cascade)
   categoria         Categorias          @relation(fields: [categoriaId], references: [id], onUpdate: Cascade)
-  Avaliacao_produto Avaliacao_produto[]
+  Avaliacoes_produto Avaliacoes_produto[]
   Avaliacoes_loja   Avaliacoes_loja[]
   Imagens_produto   Imagens_produto[]
 }
 
 //  author   User    @relation(fields: [authorId], references: [id])
 
-model Avaliacao_produto {
+model Avaliacoes_produto {
   id         Int      @id @default(autoincrement())
   usuarioId  Int
   produtoId  Int
@@ -76,8 +76,8 @@ model Avaliacao_produto {
 
 model Avaliacoes_loja {
   id         Int      @id @default(autoincrement())
-  lojaId     Int
-  produtoId  Int
+  usuarioId     Int
+  lojaId  Int
   nota       Int
   comentario String?
   createdAt  DateTime @default(now())
@@ -120,5 +120,5 @@ model Lojas {
   createdAt       DateTime          @default(now())
   updatedAt       DateTime          @updatedAt
   Produtos        Produtos[]
-  Avaliacoes_loja Avaliacoes_loja[]
+    Avaliacoes_loja Avaliacoes_loja[]
 }
