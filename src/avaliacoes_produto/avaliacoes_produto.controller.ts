@@ -1,0 +1,35 @@
+import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { AvaliacoesProdutoService } from './avaliacoes_produto.service';
+import { CreateAvaliacoesProdutoDto } from './dto/create-avaliacoes_produto.dto';
+import { UpdateAvaliacoesProdutoDto } from './dto/update-avaliacoes_produto.dto';
+import { PrismaService } from 'src/database/prisma.service';
+
+@Controller('avaliacoes-produto')
+export class AvaliacoesProdutoController {
+  constructor(private readonly avaliacoesProdutoService: AvaliacoesProdutoService) {}
+
+  @Post()
+  async create(@Body() createAvaliacoesProdutoDto: CreateAvaliacoesProdutoDto) {
+    return this.avaliacoesProdutoService.create(createAvaliacoesProdutoDto);
+  }
+
+  @Get()
+  findAll() {
+    return this.avaliacoesProdutoService.findAll();
+  }
+
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.avaliacoesProdutoService.findOne(+id);
+  }
+
+  @Patch(':id')
+  update(@Param('id') id: string, @Body() updateAvaliacoesProdutoDto: UpdateAvaliacoesProdutoDto) {
+    return this.avaliacoesProdutoService.update(+id, updateAvaliacoesProdutoDto);
+  }
+
+  @Delete(':id')
+  remove(@Param('id') id: string) {
+    return this.avaliacoesProdutoService.remove(+id);
+  }
+}

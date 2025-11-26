@@ -6,11 +6,11 @@ import { ImagensProdutoModule } from './imagens_produto/imagens_produto.module';
 import { UsuariosModule } from './usuarios/usuarios.module';
 import { LojasModule } from './lojas/lojas.module';
 import { CategoriasModule } from './categorias/categorias.module';
-import { AvaliacoesModule } from './avaliacoes/avaliacoes.module';
+import { AvaliacoesProdutoModule } from './avaliacoes_produto/avaliacoes_produto.module';
 import { PrismaService } from './database/prisma.service';
 
 @Module({
-  imports: [ProdutoModule, ImagensProdutoModule, UsuariosModule, LojasModule, CategoriasModule, AvaliacoesModule],
+  imports: [ProdutoModule, ImagensProdutoModule, UsuariosModule, LojasModule, CategoriasModule, AvaliacoesProdutoModule],
   controllers: [AppController],
   providers: [AppService, PrismaService],
 })
