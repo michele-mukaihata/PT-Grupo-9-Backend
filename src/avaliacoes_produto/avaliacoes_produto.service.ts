@@ -1,16 +1,16 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 //NotFoundException é usado quando uma informação não é existente no sistema. Error é utilizado para falhas críticas
-import { CreateAvaliacoeDto } from './dto/create-avaliacoe.dto';
-import { UpdateAvaliacoeDto } from './dto/update-avaliacoe.dto';
+import { CreateAvaliacoesProdutoDto } from './dto/create-avaliacoes_produto.dto';
+import { UpdateAvaliacoesProdutoDto } from './dto/update-avaliacoes_produto.dto';
 import { PrismaService } from 'src/database/prisma.service';
 
 @Injectable()
-export class AvaliacoesService {
+export class AvaliacoesProdutoService {
 
   constructor(private prisma: PrismaService){}
   
-  async create(data: CreateAvaliacoeDto) {
-    const avaliacao = await this.prisma.avaliacao_produto.create({
+  async create(data: CreateAvaliacoesProdutoDto) {
+    const avaliacao = await this.prisma.avaliacoes_produto.create({
       data:{
         usuarioId : data.usuarioId,
         produtoId : data.produtoId,
@@ -22,11 +22,11 @@ export class AvaliacoesService {
   }
 
   async findAll() {
-    return this.prisma.avaliacao_produto.findMany();
+    return this.prisma.avaliacoes_produto.findMany();
   }
 
   async findOne(id: number) {
-    const avaliacaoExists = await this.prisma.avaliacao_produto.findUnique({
+    const avaliacaoExists = await this.prisma.avaliacoes_produto.findUnique({
       where: {id}
     });
     if (!avaliacaoExists) {
@@ -35,14 +35,14 @@ export class AvaliacoesService {
     return avaliacaoExists;
   }
 
-  async update(id: number, data: UpdateAvaliacoeDto) {
-    const avaliacaoExists = await this.prisma.avaliacao_produto.findUnique({
+  async update(id: number, data: UpdateAvaliacoesProdutoDto) {
+    const avaliacaoExists = await this.prisma.avaliacoes_produto.findUnique({
       where: {id}
     });
     if (!avaliacaoExists) {
       throw new NotFoundException("Essa avaliação não existe.") 
     }
-    return await this.prisma.avaliacao_produto.update({
+    return await this.prisma.avaliacoes_produto.update({
       data,
       where: {id}
     }); 
@@ -50,13 +50,13 @@ export class AvaliacoesService {
 
 
   async remove(id: number) {
-    const avaliacaoExists = await this.prisma.avaliacao_produto.findUnique({
+    const avaliacaoExists = await this.prisma.avaliacoes_produto.findUnique({
       where: {id}
     });
     if (!avaliacaoExists){
       throw new NotFoundException('Essa avaliação não existe');
     }
-    return await this.prisma.avaliacao_produto.delete({
+    return await this.prisma.avaliacoes_produto.delete({
       where: {id},
     });
   }
