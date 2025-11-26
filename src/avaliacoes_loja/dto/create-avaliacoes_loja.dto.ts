@@ -1,6 +1,6 @@
 export class CreateAvaliacoesLojaDto {
+    usuarioId : number;
     lojaId : number;
-    produtoId : number;
     nota : number;
     comentario : string;
 }
