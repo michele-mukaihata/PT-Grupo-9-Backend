@@ -2,13 +2,14 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { AvaliacoesLojaService } from './avaliacoes_loja.service';
 import { CreateAvaliacoesLojaDto } from './dto/create-avaliacoes_loja.dto';
 import { UpdateAvaliacoesLojaDto } from './dto/update-avaliacoes_loja.dto';
+import { PrismaService } from 'src/database/prisma.service';
 
 @Controller('avaliacoes-loja')
 export class AvaliacoesLojaController {
   constructor(private readonly avaliacoesLojaService: AvaliacoesLojaService) {}
 
   @Post()
-  create(@Body() createAvaliacoesLojaDto: CreateAvaliacoesLojaDto) {
+  async create(@Body() createAvaliacoesLojaDto: CreateAvaliacoesLojaDto) {
     return this.avaliacoesLojaService.create(createAvaliacoesLojaDto);
   }
 

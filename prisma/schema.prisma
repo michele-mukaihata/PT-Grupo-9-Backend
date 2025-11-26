@@ -119,5 +119,5 @@ model Lojas {
   createdAt       DateTime          @default(now())
   updatedAt       DateTime          @updatedAt
   Produtos        Produtos[]
-  Avaliacoes_loja Avaliacoes_loja[]
+    Avaliacoes_loja Avaliacoes_loja[]
 }

@@ -11,7 +11,7 @@ import { PrismaService } from './database/prisma.service';
 import { AvaliacoesLojaModule } from './avaliacoes_loja/avaliacoes_loja.module';
 
 @Module({
-  imports: [ProdutoModule, ImagensProdutoModule, UsuariosModule, LojasModule, CategoriasModule, AvaliacoesProdutoModule],
+  imports: [ProdutoModule, ImagensProdutoModule, UsuariosModule, LojasModule, CategoriasModule, AvaliacoesProdutoModule, AvaliacoesLojaModule],
   controllers: [AppController],
   providers: [AppService, PrismaService],
 })
