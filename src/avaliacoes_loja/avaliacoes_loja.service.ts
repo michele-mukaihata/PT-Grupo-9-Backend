@@ -12,8 +12,8 @@ export class AvaliacoesLojaService {
   async create(data: CreateAvaliacoesLojaDto) {
     const avaliacao = await this.prisma.avaliacoes_loja.create({
       data:{
+        usuarioId : data.usuarioId,
         lojaId : data.lojaId,
-        produtoId : data.produtoId,
         nota : data.nota, 
         comentario : data.comentario,
       }
