@@ -13,8 +13,8 @@ export class AvaliacoesLojaService {
     const avaliacao = await this.prisma.avaliacoes_loja.create({
       data:{
         lojaId : data.lojaId,
-        produtoId : data.produtoId,
         nota : data.nota, 
+        usuarioId: data.usuarioId,
         comentario : data.comentario,
       }
     })

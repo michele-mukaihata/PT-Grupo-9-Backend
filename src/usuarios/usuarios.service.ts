@@ -69,6 +69,29 @@ export class UsuarioService {
         email: true,
         username: true,
         foto_perfil_url: true,
+        
+        Lojas: { 
+          select: {
+            id: true,
+            nome: true,
+            Produtos: { 
+              select: {
+                id: true,
+                nome: true,
+                preco: true,
+                estoque: true, 
+                Imagens_produto: { 
+                  select: {
+                    url_imagem: true,
+                    ordem: true
+                  },
+                  orderBy: { ordem: 'asc' },
+                  take: 1
+                }
+              }
+            }
+          }
+        }
       }
     });
 
@@ -77,7 +100,7 @@ export class UsuarioService {
     }
 
     return usuario;
-}
+  }
 
   async findByEmail(email: string) {
     const usuario = await this.prisma.usuarios.findUnique({ where: { email } });

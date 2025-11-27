@@ -53,7 +53,6 @@ model Produtos {
   loja              Lojas               @relation(fields: [lojaId], references: [id], onUpdate: Cascade, onDelete:Cascade)
   categoria         Categorias          @relation(fields: [categoriaId], references: [id], onUpdate: Cascade)
   Avaliacoes_produto Avaliacoes_produto[]
-  Avaliacoes_loja   Avaliacoes_loja[]
   Imagens_produto   Imagens_produto[]
 }
 
@@ -84,7 +83,6 @@ model Avaliacoes_loja {
   updatedAt  DateTime @updatedAt
 
   loja                  Lojas                   @relation(fields: [lojaId], references: [id], onUpdate: Cascade, onDelete:Cascade)
-  produto               Produtos                @relation(fields: [produtoId], references: [id], onUpdate: Cascade, onDelete:Cascade)
   Comentarios_avaliacao Comentarios_avaliacao[]
 }
 
