@@ -6,6 +6,7 @@
 
 generator client {
   provider = "prisma-client-js"
+  binaryTargets = ["native", "windows"]
 }
 
 datasource db {
@@ -29,7 +30,7 @@ model Usuarios {
   nome            String   @db.VarChar(255)
   email           String   @unique @db.VarChar(255)
   senha_hash      String   @db.VarChar(255)
-  foto_perfil_url String?  @db.VarChar(255)
+  foto_perfil_url String?  @db.Text
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 
@@ -53,7 +54,8 @@ model Produtos {
   loja               Lojas                @relation(fields: [lojaId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   categoria          Categorias           @relation(fields: [categoriaId], references: [id], onUpdate: Cascade)
   Avaliacoes_produto Avaliacoes_produto[]
-  Imagens_produto    Imagens_produto[]
+  Imagens_produto   Imagens_produto[]
+
 }
 
 //  author   User    @relation(fields: [authorId], references: [id])
@@ -82,8 +84,12 @@ model Avaliacoes_loja {
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
+<<<<<<< HEAD
   usuario               Usuarios                @relation(fields: [usuarioId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   loja                  Lojas                   @relation(fields: [lojaId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+=======
+  loja                  Lojas                   @relation(fields: [lojaId], references: [id], onUpdate: Cascade, onDelete:Cascade)
+>>>>>>> 86cae247f59003a12638a28e0fbe41e3304a2627
   Comentarios_avaliacao Comentarios_avaliacao[]
 }
 

@@ -2,7 +2,7 @@ import { IsOptional, IsString } from "class-validator";
 
 export class UsuariosEntity {
     @IsString()
-    id: string;
+    id: number;
 
     @IsString()
     email: string;

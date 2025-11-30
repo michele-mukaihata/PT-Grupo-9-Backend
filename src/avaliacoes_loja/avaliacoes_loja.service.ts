@@ -15,6 +15,7 @@ export class AvaliacoesLojaService {
         usuarioId : data.usuarioId,
         lojaId : data.lojaId,
         nota : data.nota, 
+        usuarioId: data.usuarioId,
         comentario : data.comentario,
       }
     })

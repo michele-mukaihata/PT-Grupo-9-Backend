@@ -1,7 +1,8 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { PrismaService } from '../database/prisma.service';
 import { CreateUsuarioDto } from './dto/create-usuario.dto';
 import { UpdateUsuarioDto } from './dto/update-usuario.dto';
+import { ChangePasswordDto } from './dto/change-password.dto';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
@@ -14,12 +15,12 @@ export class UsuarioService {
       throw new ConflictException('Este e-mail já está sendo usado.');
     }
 
-    const hashedPassword = await bcrypt.hash(dados.senha_hash, 10);
+    const hashedPassword = await bcrypt.hash(dados.senha, 10);
     
     return await this.prisma.usuarios.create({
       data: {
         email: dados.email,
-        username: dados.username, // Adicionando username ao data
+        username: dados.username,
         nome: dados.nome,
         senha_hash: hashedPassword,
         foto_perfil_url: dados.foto_perfil_url || null,
@@ -59,6 +60,48 @@ export class UsuarioService {
     return usuario;
   }
 
+  async findByUsername(username: string) {
+    const usuario = await this.prisma.usuarios.findUnique({
+      where: { username },
+      select: {
+        id: true,
+        nome: true,
+        email: true,
+        username: true,
+        foto_perfil_url: true,
+        
+        Lojas: { 
+          select: {
+            id: true,
+            nome: true,
+            Produtos: { 
+              select: {
+                id: true,
+                nome: true,
+                preco: true,
+                estoque: true, 
+                Imagens_produto: { 
+                  select: {
+                    url_imagem: true,
+                    ordem: true
+                  },
+                  orderBy: { ordem: 'asc' },
+                  take: 1
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+
+    if (!usuario) {
+      throw new NotFoundException(`Usuário ${username} não encontrado`);
+    }
+
+    return usuario;
+  }
+
   async findByEmail(email: string) {
     const usuario = await this.prisma.usuarios.findUnique({ where: { email } });
 
@@ -78,9 +121,11 @@ export class UsuarioService {
       throw new NotFoundException(`Usuario with ID ${id} not found`);
     }
 
-  const hashedPassword = dados.senha_hash
-    ? await bcrypt.hash(dados.senha_hash, 10)
-    : usuario.senha_hash; // Caso contrário, mantém o hash da senha existente
+    let hashedPassword = usuario.senha_hash;
+    if (dados.senha) { 
+          // 3. Se sim, crie um *novo* hash para a *nova* senha
+      hashedPassword = await bcrypt.hash(dados.senha, 10);
+    }
 
 
     return await this.prisma.usuarios.update({
@@ -98,6 +143,29 @@ export class UsuarioService {
         nome: true,
         createdAt: true,
         updatedAt: true,
+      },
+    });
+  }
+
+  async updatePassword(id: number, dados: ChangePasswordDto) {
+    const usuario = await this.prisma.usuarios.findUnique({ where: { id } });
+
+    if (!usuario) {
+      throw new NotFoundException('Usuário não encontrado');
+    }
+
+    const isPasswordValid = await bcrypt.compare(dados.senhaAntiga, usuario.senha_hash);
+    
+    if (!isPasswordValid) {
+      throw new UnauthorizedException('A senha antiga está incorreta.');
+    }
+
+    const newHashedPassword = await bcrypt.hash(dados.novaSenha, 10);
+
+    return await this.prisma.usuarios.update({
+      where: { id },
+      data: {
+        senha_hash: newHashedPassword,
       },
     });
   }
