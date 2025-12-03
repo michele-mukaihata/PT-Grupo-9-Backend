@@ -84,12 +84,8 @@ model Avaliacoes_loja {
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
-<<<<<<< HEAD
   usuario               Usuarios                @relation(fields: [usuarioId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   loja                  Lojas                   @relation(fields: [lojaId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-=======
-  loja                  Lojas                   @relation(fields: [lojaId], references: [id], onUpdate: Cascade, onDelete:Cascade)
->>>>>>> 86cae247f59003a12638a28e0fbe41e3304a2627
   Comentarios_avaliacao Comentarios_avaliacao[]
 }
 

@@ -11,9 +11,11 @@ import { ConfigModule } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './auth/guards/auth.guard';
+import { AvaliacoesLojaModule } from './avaliacoes_loja/avaliacoes_loja.module';
+import { AvaliacoesProdutoModule } from './avaliacoes_produto/avaliacoes_produto.module';
 
 @Module({
-  imports: [ProdutoModule, ImagensProdutoModule, UsuariosModule, LojasModule, CategoriasModule, AuthModule, JwtModule, ConfigModule.forRoot({isGlobal: true,}),],
+  imports: [ProdutoModule, AvaliacoesLojaModule, AvaliacoesProdutoModule, ImagensProdutoModule, UsuariosModule, LojasModule, CategoriasModule, AuthModule, JwtModule, ConfigModule.forRoot({isGlobal: true,}),],
   controllers: [AppController],
   providers: [AppService, { provide: APP_GUARD, useClass: AuthGuard, },],
 })
