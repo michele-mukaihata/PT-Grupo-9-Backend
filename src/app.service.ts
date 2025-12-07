@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-// trabalhar no banco de dados
 
 @Injectable()
 export class AppService {
