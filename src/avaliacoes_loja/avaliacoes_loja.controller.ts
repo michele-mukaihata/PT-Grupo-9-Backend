@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe } from '@nestjs/common';
 import { AvaliacoesLojaService } from './avaliacoes_loja.service';
 import { CreateAvaliacoesLojaDto } from './dto/create-avaliacoes_loja.dto';
 import { UpdateAvaliacoesLojaDto } from './dto/update-avaliacoes_loja.dto';
@@ -26,11 +26,14 @@ export class AvaliacoesLojaController {
     return this.avaliacoesLojaService.findOne(+id);
   }
 
+  @Public()
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAvaliacoesLojaDto: UpdateAvaliacoesLojaDto) {
-    return this.avaliacoesLojaService.update(+id, updateAvaliacoesLojaDto);
+  update(@Param('id', ParseIntPipe) id: number,
+   @Body() updateAvaliacoesLojaDto: UpdateAvaliacoesLojaDto) {
+    return this.avaliacoesLojaService.update(id, updateAvaliacoesLojaDto);
   }
 
+  @Public()
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.avaliacoesLojaService.remove(+id);
